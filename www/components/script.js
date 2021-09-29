@@ -25,7 +25,7 @@ var obstaculo;
 function inicioJogo(){
 areaJogo.start();
 personagemObj = new componente("#00CED1", 10, 120, 30, 30); 
-obstaculo = new componente("#4B0082", 150,65,120,10);
+obstaculo = new componente("#4B0082", 150,60,120,10);
 }
 
 let areaJogo = {
@@ -38,6 +38,9 @@ let areaJogo = {
   }, 
     limpar: function limpar (){ 
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  },
+  parar: function parar(){
+    clearInterval(this.intervalo);
   }
 }
 
@@ -57,10 +60,40 @@ this.atualiza = function(){
 this.novaPosicao = function(){
   this.x += this.velocidadeX;
   this.y += this.velocidadeY;
+ },
+ this.bater = function(obj){
+   //POSIÇÃO DO PERSONAGEM
+   let esquerda = this.x;
+   let direita = this.x + this.largura;
+   let superior = this.y;
+   let inferior = this.y + this.altura;
+
+   //POSIÇÃO DO OBSTACULO
+   let objEsquerda = obj.x;
+   let objDireita = obj.x + obj.altura;
+   let objSuperior = obj.y;
+   let objInferior = obj.y + obj.largura;
+
+   let batida = true;
+
+   if(
+     (inferior < objSuperior)||(superior > objInferior)||(direita < objEsquerda)|| (esquerda > objDireita)
+   ){
+     batida = false;
+   }
+   return batida;
  }
 }
 
 function atualizaAreaJogo(){
+  if(personagemObj.bater(obstaculo)){
+  areaJogo.parar();
+  }else { 
+  areaJogo.limpar();
+  obstaculo.atualiza();
+  personagemObj.novaPosicao();
+  personagemObj.atualiza();
+  }
   areaJogo.limpar();
   obstaculo.atualiza();
   personagemObj.novaPosicao();
