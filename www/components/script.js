@@ -22,14 +22,15 @@
  setTimeout(parar, 800);
  });
 }
-
 var personagemObj;
 var obstaculo = [];
+var pontos;
 
 ///Inicio do Jogo 
 function inicioJogo(){
 areaJogo.start();
 personagemObj = new componente('#008B8B', 10, 120, 30, 30); 
+pontos =  new componente('#000', 10, 30, 'Consolas','30px', 'texto'); 
 }
 
 ///Area do Jogo
@@ -57,17 +58,25 @@ if((areaJogo.frame / n )% 1 == 0){
   return false;
 }
 }
-function componente(cor, x, y, largura, altura){
+function componente(cor, x, y, largura, altura, tipo){
+this.tipo = tipo,
 this.altura = altura,
 this.largura = largura,
 this.x = x,
 this.y = y,
 this.velocidadeX = 0,
 this.velocidadeY = 0,
+this.texto = 0,
 this.atualiza = function(){
  contexto = areaJogo.context;
- contexto.fillStyle = cor
- contexto.fillRect(this.x,this.y, this.altura, this.largura);
+ if (this.tipo == "texto"){
+contexto.font = this.altura + " " + this.largura;
+contexto.fillStyle = cor;
+contexto.fillText(this.texto, this.x, this.y);
+ }else{
+ contexto.fillStyle = cor,
+ contexto.fillRect(this.x,this.y, this.altura, this.largura); 
+}
 },
 
 //Nova Posição
@@ -101,8 +110,7 @@ this.novaPosicao = function(){
 
 //Atualiza Area do Jogo 
 function atualizaAreaJogo(){
-  let x;
-  let y;
+  let x, y;
   for(i = 0; i < obstaculo.length; i++){
    if(personagemObj.bater(obstaculo[i])){
   areaJogo.parar(); 
@@ -126,6 +134,8 @@ function atualizaAreaJogo(){
     obstaculo[i].x += -1;
     obstaculo[i].atualiza();
   }
+  pontos.texto = "Pontos:" + areaJogo.frame;
+  pontos.atualiza();
   personagemObj.novaPosicao();
   personagemObj.atualiza();
   }
