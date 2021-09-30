@@ -30,7 +30,7 @@ var pontos;
 function inicioJogo(){
 areaJogo.start();
 personagemObj = new componente('#008B8B', 10, 120, 30, 30); 
-pontos =  new componente('#000', 10, 30, 'Consolas','30px', 'texto'); 
+pontos =  new componente('#000000', 10, 30, 'Consolas','30px', 'texto'); 
 }
 
 ///Area do Jogo
