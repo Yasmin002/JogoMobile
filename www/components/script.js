@@ -4,30 +4,35 @@
 
  document.querySelector("#direita").addEventListener("click", function(){
  direita();
+ setTimeout(parar, 800);
  });
 
  document.querySelector("#esquerda").addEventListener("click", function(){
  esquerda();
+ setTimeout(parar, 800);
  });
 
   document.querySelector("#subir").addEventListener("click", function(){
  subir();
+ setTimeout(parar, 800);
  });
 
  document.querySelector("#descer").addEventListener("click", function(){
  descer();
+ setTimeout(parar, 800);
  });
 }
 
 var personagemObj;
-var obstaculo; 
+var obstaculo = [];
 
+///Inicio do Jogo 
 function inicioJogo(){
 areaJogo.start();
-personagemObj = new componente("#00CED1", 10, 120, 30, 30); 
-obstaculo = new componente("#4B0082", 150,60,120,10);
+personagemObj = new componente('#008B8B', 10, 120, 30, 30); 
 }
 
+///Area do Jogo
 let areaJogo = {
   canvas: document.createElement("canvas"),
   start: function(){ 
@@ -35,6 +40,7 @@ let areaJogo = {
     this.context = this.canvas.getContext("2d");
     document.body.insertBefore(this.canvas, document.body.childNodes[0]);
     this.intervalo = setInterval(atualizaAreaJogo, 20);
+    this.frame = 0;
   }, 
     limpar: function limpar (){ 
       this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
@@ -43,7 +49,14 @@ let areaJogo = {
     clearInterval(this.intervalo);
   }
 }
-
+//Intervalo
+function contarIntervalo(n){
+if((areaJogo.frame / n )% 1 == 0){
+  return true;
+}else{
+  return false;
+}
+}
 function componente(cor, x, y, largura, altura){
 this.altura = altura,
 this.largura = largura,
@@ -57,6 +70,7 @@ this.atualiza = function(){
  contexto.fillRect(this.x,this.y, this.altura, this.largura);
 },
 
+//Nova Posição
 this.novaPosicao = function(){
   this.x += this.velocidadeX;
   this.y += this.velocidadeY;
@@ -85,21 +99,38 @@ this.novaPosicao = function(){
  }
 }
 
+//Atualiza Area do Jogo 
 function atualizaAreaJogo(){
-  if(personagemObj.bater(obstaculo)){
-  areaJogo.parar();
-  }else { 
+  let x;
+  let y;
+  for(i = 0; i < obstaculo.length; i++){
+   if(personagemObj.bater(obstaculo[i])){
+  areaJogo.parar(); 
+  return;
+  }
+} 
   areaJogo.limpar();
-  obstaculo.atualiza();
+  areaJogo.frame += 1;
+ if (areaJogo.frame == 1 || contarIntervalo(150)){
+   x = areaJogo.canvas.width;
+   minAltura = 20;
+   maxAltura = 200;
+   altura = Math.floor(Math.random()*(maxAltura-minAltura+1)+minAltura);
+   minVazio = 50;
+   maxVazio = 200;
+   vazio = Math.floor(Math.random()*(maxVazio-minVazio+1)+minVazio);
+   obstaculo.push(new componente('#4B0082',x,0,altura,10));
+   obstaculo.push(new componente('#4B0082',x,altura + vazio, x - altura - vazio,10));
+ }
+  for (i = 0; i < obstaculo.length; i++){
+    obstaculo[i].x += -1;
+    obstaculo[i].atualiza();
+  }
   personagemObj.novaPosicao();
   personagemObj.atualiza();
   }
-  areaJogo.limpar();
-  obstaculo.atualiza();
-  personagemObj.novaPosicao();
-  personagemObj.atualiza();
-}
 
+///Botão
 function subir(){
 personagemObj.velocidadeY -= 1;
 }
@@ -111,5 +142,11 @@ personagemObj.velocidadeX += 1;
 }
 function esquerda(){
 personagemObj.velocidadeX -= 1;
+}
+
+//Parar
+function parar (){
+personagemObj.velocidadeX = 0;
+personagemObj.velocidadeY = 0;
 }
 
