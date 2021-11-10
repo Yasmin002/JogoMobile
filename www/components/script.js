@@ -21,7 +21,50 @@
  descer();
  setTimeout(parar, 800);
  });
+
+ document.querySelector("#light").addEventListener("click", function(){
+    let temas = JSON.parse(localStorage.getItem("claro"));
+    document.querySelector("body").style.background = temas.body;
+    document.querySelector("canvas").style.background = temas.canvas;
+
+    const botao = document.querySelectorAll(".seta");
+    Array.prototype.filter.call(botao, function(botao){
+      botao.style.color = temas.botao;
+    })
+  });
+
+  document.querySelector("#dark").addEventListener("click", function(){
+    let temas  = JSON.parse(localStorage.getItem("dark"));
+    document.querySelector("body").style.background = temas.body;
+    document.querySelector("canvas").style.background = temas.canvas;
+
+    const botao = document.querySelectorAll(".seta");
+    Array.prototype.filter.call(botao, function(botao){
+      botao.style.color = temas.botao;
+    })
+  });
+
+/////temas
+   function temas (){
+    let claro = {
+      canvas: "#ECECEC",
+      body: "#fff",
+      botao: "#9B9999"
+    }
+
+    localStorage.setItem("claro", JSON.stringify(claro));
+
+    let dark = {
+      canvas: "#000",
+      body: "#1E1E1E",
+      botao: "#626161"
+    }
+
+    localStorage.setItem("dark", JSON.stringify(dark));
+  }
+   temas ();
 }
+  
 var personagemObj;
 var obstaculo = [];
 var pontos;
@@ -29,8 +72,8 @@ var pontos;
 ///Inicio do Jogo 
 function inicioJogo(){
 areaJogo.start();
-personagemObj = new componente('#008B8B', 10, 120, 30, 30); 
-pontos =  new componente('#000000', 10, 30, 'Consolas','30px', 'texto'); 
+personagemObj = new componente('#8C3BE0', 10, 120, 30, 30); 
+pontos =  new componente('#8C3BE0', 10, 30, 'Consolas','30px', 'texto'); 
 }
 
 ///Area do Jogo
@@ -127,8 +170,8 @@ function atualizaAreaJogo(){
    minVazio = 50;
    maxVazio = 200;
    vazio = Math.floor(Math.random()*(maxVazio-minVazio+1)+minVazio);
-   obstaculo.push(new componente('#4B0082',x,0,altura,10));
-   obstaculo.push(new componente('#4B0082',x,altura + vazio, x - altura - vazio,10));
+   obstaculo.push(new componente('#1B9913',x,0,altura,10));
+   obstaculo.push(new componente('#1B9913',x,altura + vazio, x - altura - vazio,10));
  }
   for (i = 0; i < obstaculo.length; i++){
     obstaculo[i].x += -1;
